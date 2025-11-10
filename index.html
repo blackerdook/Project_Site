@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Solo Garden — App Walkthrough</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #050806;
+      --green: #2ecc71;
+      --text: #f6fff4;
+      --muted: rgba(246, 255, 244, 0.55);
+      --panel: rgba(6, 18, 12, 0.55);
+      --panel-border: rgba(113, 206, 140, 0.2);
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top, #0a1910 0%, #040605 55%, #000 100%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .glow {
+      position: fixed;
+      width: 480px;
+      height: 480px;
+      background: radial-gradient(circle, rgba(71, 223, 137, 0.25), rgba(5, 8, 6, 0));
+      filter: blur(70px);
+      z-index: 0;
+      pointer-events: none;
+    }
+    .glow.g1 { top: -120px; left: -80px; }
+    .glow.g2 { bottom: -140px; right: -80px; background: radial-gradient(circle, rgba(18, 115, 213, 0.22), rgba(5, 8, 6, 0)); }
+
+    .app-shell {
+      width: min(1150px, 100vw);
+      height: min(720px, 100vh);
+      background: radial-gradient(circle at top, rgba(4,5,5,.05), rgba(0,0,0,.85));
+      border: 1px solid rgba(150, 236, 174, 0.15);
+      border-radius: 26px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      z-index: 1;
+      backdrop-filter: blur(14px);
+      overflow: hidden;
+    }
+
+    .topbar {
+      padding: 18px 26px 4px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .brand {
+      font-weight: 700;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      font-size: .9rem;
+    }
+    .brand-pill {
+      width: 10px;
+      height: 10px;
+      background: #6bffb0;
+      border-radius: 99px;
+      box-shadow: 0 0 12px rgba(107, 255, 176, .6);
+    }
+    .step-counter {
+      background: rgba(10, 38, 20, 0.5);
+      border: 1px solid rgba(242, 255, 245, 0.04);
+      border-radius: 999px;
+      padding: 4px 14px;
+      font-size: 12px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .content-row {
+      flex: 1;
+      display: flex;
+      gap: 20px;
+      padding: 18px 26px 60px;
+      overflow: hidden;
+    }
+
+    .phone-frame {
+      width: 36%;
+      min-width: 320px;
+      background: radial-gradient(circle at top, rgba(3,4,4,0), rgba(1,1,1,0.7));
+      border-radius: 30px;
+      border: 1px solid rgba(111, 183, 116, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .phone-img {
+      width: 92%;
+      border-radius: 32px;
+      border: 1px solid rgba(181, 238, 191, 0.12);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+      max-height: 90%;
+      object-fit: contain;
+    }
+
+    .text-panel {
+      flex: 1;
+      background: linear-gradient(180deg, rgba(5,12,8,0.55) 0%, rgba(3,6,4,0.15) 100%);
+      border: 1px solid rgba(121, 220, 141, 0.1);
+      border-radius: 22px;
+      padding: 20px 22px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-width: 0;
+      overflow-y: auto;
+    }
+
+    .screen-tag {
+      font-size: 13px;
+      background: rgba(106, 198, 138, 0.15);
+      border: 1px solid rgba(184, 255, 209, 0.06);
+      width: fit-content;
+      border-radius: 999px;
+      padding: 4px 14px 4px 8px;
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .dot {
+      width: 20px;
+      height: 20px;
+      background: radial-gradient(circle, rgba(107,255,176,1), rgba(107,255,176,0));
+      border-radius: 999px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 1.35rem;
+      line-height: 1.1;
+    }
+    p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .feature-heading,
+    .tech-heading {
+      font-size: .72rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      margin-top: 14px;
+      margin-bottom: 6px;
+      color: rgba(246, 255, 244, 0.35);
+    }
+
+    .feature-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 10px;
+    }
+
+    .feature-card,
+    .tech-card {
+      background: rgba(5, 14, 9, 0.5);
+      border: 1px solid rgba(192, 255, 209, 0.02);
+      border-radius: 16px;
+      padding: 8px 10px 10px;
+    }
+    .feature-title,
+    .tech-title {
+      font-weight: 600;
+      font-size: .78rem;
+      margin-bottom: 3px;
+    }
+    .feature-body,
+    .tech-body {
+      font-size: .7rem;
+      color: rgba(246, 255, 244, 0.5);
+    }
+
+    .nav-arrows {
+      position: absolute;
+      right: 18px;
+      bottom: 14px;
+      display: flex;
+      gap: 10px;
+    }
+    .arrow-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      border: 1px solid rgba(113, 206, 140, 0.22);
+      background: radial-gradient(circle, rgba(3,65,30,0.9), rgba(1,1,1,0.1));
+      display: grid;
+      place-items: center;
+      font-size: 18px;
+      cursor: pointer;
+      transition: transform .15s ease-out;
+    }
+    .arrow-btn:active {
+      transform: scale(.96);
+    }
+
+    .slide-indicator {
+      position: absolute;
+      left: 26px;
+      bottom: 18px;
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      max-width: 55%;
+    }
+    .dot-indicator {
+      width: 22px;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(183, 189, 185, 0.07);
+    }
+    .dot-indicator.active {
+      background: rgba(118, 243, 166, 0.9);
+      box-shadow: 0 0 10px rgba(118, 243, 166, .9);
+    }
+
+    /* ==== responsive ==== */
+    @media (max-width: 850px) {
+      body {
+        align-items: flex-start;
+        justify-content: flex-start;
+        overflow-y: auto;
+      }
+      .app-shell {
+        width: 100%;
+        height: 100vh;
+        border-radius: 0;
+      }
+      .content-row {
+        flex-direction: column;
+        padding: 12px 16px 90px;
+      }
+      .phone-frame {
+        width: 100%;
+        min-height: 280px;
+      }
+      .phone-img {
+        width: 56%;
+      }
+      .slide-indicator {
+        left: 16px;
+        bottom: 62px;
+        max-width: 70%;
+      }
+      .nav-arrows { bottom: 14px; right: 14px; }
+      .text-panel { max-height: 50vh; }
+    }
+
+    @media (max-width: 520px) {
+      .phone-img { width: 70%; }
+      h2 { font-size: 1.1rem; }
+      .feature-list { grid-template-columns: 1fr; }
+      .step-counter { font-size: 11px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="glow g1"></div>
+  <div class="glow g2"></div>
+
+  <div class="app-shell">
+    <div class="topbar">
+      <div class="brand">
+        <div class="brand-pill"></div>
+        Solo Garden · Product Tour
+      </div>
+      <div class="step-counter" id="stepCounter">1 / 8</div>
+    </div>
+
+    <div class="content-row">
+      <div class="phone-frame">
+        <!-- swap these with your real images -->
+        <img id="screenImg" class="phone-img" src="images/home.png" alt="Solo Garden screen" />
+      </div>
+
+      <div class="text-panel">
+        <div class="screen-tag" id="screenTag">
+          <div class="dot"></div>
+          Home dashboard
+        </div>
+        <h2 id="screenTitle">Welcome home 🌱</h2>
+        <p id="screenDesc">
+          A personalised dashboard that greets the user, shows the current time, weather in their location, and
+          encourages daily plant care habits.
+        </p>
+
+        <div class="feature-heading">Key features</div>
+        <div class="feature-list" id="featureList"></div>
+
+        <div class="tech-heading">Tech & APIs used</div>
+        <div class="feature-list" id="techList"></div>
+      </div>
+    </div>
+
+    <div class="slide-indicator" id="slideIndicator"></div>
+    <div class="nav-arrows">
+      <button class="arrow-btn" id="prevBtn" aria-label="Previous screen">◀</button>
+      <button class="arrow-btn" id="nextBtn" aria-label="Next screen">▶</button>
+    </div>
+  </div>
+
+  <script>
+    // each slide now has: tag, title, img, desc, features[], tech[]
+    // tech[] = where we mention React Native/Expo, Supabase, camera, location, Trefle/Perenual, OpenAI fallback
+    const slides = [
+      {
+        tag: "Home dashboard",
+        title: "Welcome home 🌱",
+        img: "images/home.png",
+        desc: "Shows greeting, current date/time, weather from device location, and a task summary. This is the central hub.",
+        features: [
+          { title: "Dynamic greeting", body: "Morning/afternoon/evening message." },
+          { title: "Weather block", body: "Location-aware, shows temp + condition." },
+          { title: "Task preview", body: "Shows today’s plant care items." },
+          { title: "Floating chat bubble", body: "Entry point for assistant/help." }
+        ],
+        tech: [
+          { title: "React Native + Expo", body: "Main UI layout, safe area, cards." },
+          { title: "Expo Location", body: "Gets city (e.g. Tauranga) for weather." },
+          { title: "Weather API (e.g. OpenWeather)", body: "Fetches current condition." },
+          { title: "Conditional rendering", body: "Show ‘All done 🎉’ when no tasks." }
+        ]
+      },
+      {
+        tag: "Plant discovery",
+        title: "Discover plants 🌿",
+        img: "images/plants.png",
+        desc: "Searchable plant list for gardening plants. You said you want to filter out trees and use OpenAI to fill what Perenual free tier doesn’t return.",
+        features: [
+          { title: "Search bar", body: "Instant filter by name." },
+          { title: "Empty state", body: "‘Nothing matched your search.’" },
+          { title: "Dark layout", body: "Consistent with app brand." },
+          { title: "Expandable", body: "Ready for trending/recommended." }
+        ],
+        tech: [
+          { title: "Fetch to plant API (Trefle/Perenual)", body: "Gets base plant data." },
+          { title: "Client-side filter", body: "Hide non-garden plants." },
+          { title: "Optional OpenAI enrich", body: "Fill missing description/images." },
+          { title: "React hooks", body: "useState/useEffect to load + filter list." }
+        ]
+      },
+      {
+        tag: "Camera & identify",
+        title: "Camera identify mode 📸",
+        img: "images/camera.png",
+        desc: "Full-screen camera with capture button, identify pill, and gallery import for plant ID.",
+        features: [
+          { title: "Full-screen camera", body: "Minimal UI, focus on subject." },
+          { title: "Identify CTA", body: "Top-left pill to start analysis." },
+          { title: "Gallery picker", body: "Import existing photo." },
+          { title: "Bottom tab bar", body: "Navigate without leaving camera." }
+        ],
+        tech: [
+          { title: "Expo Camera / ImagePicker", body: "Request camera permissions." },
+          { title: "Base64 / file upload", body: "Send image to plant-ID service." },
+          { title: "Async/await + try/catch", body: "Handle identify errors cleanly." },
+          { title: "Conditional overlays", body: "Show identifying… state." }
+        ]
+      },
+      {
+        tag: "Journal & tasks",
+        title: "My Plant Journal ✅",
+        img: "images/journal.png",
+        desc: "Add plant-care tasks, filter them (All / Open / Done), and manage user’s own plants with edit/delete.",
+        features: [
+          { title: "Inline task input", body: "Add a new task right on top." },
+          { title: "Filter chips", body: "All · Open · Done buttons." },
+          { title: "Plant list", body: "Show name, date added, image." },
+          { title: "Action buttons", body: "Edit or delete per item." }
+        ],
+        tech: [
+          { title: "Supabase CRUD", body: "Store tasks and plant records." },
+          { title: "React Native FlatList", body: "Renderable, scrollable task list." },
+          { title: "Stateful filters", body: "Update list without reloading screen." },
+          { title: "Date formatting", body: "‘Added 22 Oct 2025’ style text." }
+        ]
+      },
+      {
+        tag: "Auth modal",
+        title: "Auth & plant actions",
+        img: "images/remedy.png",
+        desc: "Modal-style sign-in on top of a garden photo. User can sign in, create account, or continue as guest.",
+        features: [
+          { title: "Tabbed auth", body: "Sign in / Create account switch." },
+          { title: "Guest mode", body: "Enter app without full account." },
+          { title: "Close button (X)", body: "Non-blocking UX." },
+          { title: "Background image", body: "Keeps the app aesthetic." }
+        ],
+        tech: [
+          { title: "Supabase Auth", body: "Email/password login + sign-up." },
+          { title: "React Native Modal", body: "Overlay on top of current screen." },
+          { title: "Form validation", body: "Check empty email/password." },
+          { title: "Secure storage (optional)", body: "Persist session token." }
+        ]
+      },
+      {
+        tag: "Settings",
+        title: "Settings & preferences ⚙️",
+        img: "images/settings.png",
+        desc: "Account status, dark mode toggle, notifications, and support links.",
+        features: [
+          { title: "Account section", body: "Shows user email or ‘Guest’." },
+          { title: "Dark mode", body: "Toggle theme across app." },
+          { title: "Notifications", body: "Space to enable reminders." },
+          { title: "Help & Support", body: "Feedback, rate app, legal." }
+        ],
+        tech: [
+          { title: "Context / Theme provider", body: "Global dark/light theme." },
+          { title: "AsyncStorage", body: "Persist user’s theme preference." },
+          { title: "Reusable row components", body: "List-style settings UI." },
+          { title: "Expo Notifications (future)", body: "Schedule watering reminders." }
+        ]
+      },
+      {
+        tag: "Seasonal (placeholder)",
+        title: "Seasonal plants 🌤️",
+        img: "images/seasonal.png",
+        desc: "A slot for your seasonal tip/seasonal plants screen. Show what to grow in spring in Tauranga with spacing/watering tips.",
+        features: [
+          { title: "Season-aware list", body: "Spring / Summer / Autumn / Winter." },
+          { title: "Location-based", body: "Adjust by user’s region." },
+          { title: "Card layout", body: "Image + description + bullet tips." },
+          { title: "CTA to journal", body: "‘Add to tasks’ in one tap." }
+        ],
+        tech: [
+          { title: "Weather/season logic", body: "Map month → season." },
+          { title: "Supabase or local JSON", body: "Store seasonal plant data." },
+          { title: "Conditional UI", body: "Show ‘No seasonal plants’ fallback." },
+          { title: "Optional OpenAI", body: "Generate extra growing notes." }
+        ]
+      },
+      {
+        tag: "Badges (placeholder)",
+        title: "Badges & XP 🏅",
+        img: "images/badges.png",
+        desc: "Gamified screen to show a user’s progress, streaks, XP and unlockable badges for completing plant tasks.",
+        features: [
+          { title: "XP ring / progress", body: "Visual feedback for growth." },
+          { title: "Badges grid", body: "Locked vs unlocked states." },
+          { title: "Task → XP link", body: "Completing tasks grants XP." },
+          { title: "Profile tie-in", body: "Show on user profile page." }
+        ],
+        tech: [
+          { title: "Supabase tables", body: "Store xp, level, badge_unlocks." },
+          { title: "Derived state", body: "Compute level from XP." },
+          { title: "Conditional render", body: "Grey-out locked badges." },
+          { title: "Animations (Reanimated)", body: "Pulse/glow when unlocked." }
+        ]
+      }
+    ];
+
+    let current = 0;
+
+    const imgEl = document.getElementById("screenImg");
+    const tagEl = document.getElementById("screenTag");
+    const titleEl = document.getElementById("screenTitle");
+    const descEl = document.getElementById("screenDesc");
+    const featureListEl = document.getElementById("featureList");
+    const techListEl = document.getElementById("techList");
+    const stepCounterEl = document.getElementById("stepCounter");
+    const slideIndicatorEl = document.getElementById("slideIndicator");
+
+    function renderIndicators() {
+      slideIndicatorEl.innerHTML = "";
+      slides.forEach((_, idx) => {
+        const d = document.createElement("div");
+        d.className = "dot-indicator" + (idx === current ? " active" : "");
+        slideIndicatorEl.appendChild(d);
+      });
+    }
+
+    function renderSlide(idx) {
+      const s = slides[idx];
+      imgEl.src = s.img;
+      imgEl.alt = s.title;
+      tagEl.innerHTML = `<div class="dot"></div> ${s.tag}`;
+      titleEl.textContent = s.title;
+      descEl.textContent = s.desc;
+
+      featureListEl.innerHTML = "";
+      s.features.forEach(f => {
+        const card = document.createElement("div");
+        card.className = "feature-card";
+        card.innerHTML = `<div class="feature-title">${f.title}</div><div class="feature-body">${f.body}</div>`;
+        featureListEl.appendChild(card);
+      });
+
+      techListEl.innerHTML = "";
+      s.tech.forEach(t => {
+        const card = document.createElement("div");
+        card.className = "tech-card";
+        card.innerHTML = `<div class="tech-title">${t.title}</div><div class="tech-body">${t.body}</div>`;
+        techListEl.appendChild(card);
+      });
+
+      stepCounterEl.textContent = (idx + 1) + " / " + slides.length;
+      renderIndicators();
+    }
+
+    document.getElementById("nextBtn").addEventListener("click", () => {
+      current = (current + 1) % slides.length;
+      renderSlide(current);
+    });
+
+    document.getElementById("prevBtn").addEventListener("click", () => {
+      current = (current - 1 + slides.length) % slides.length;
+      renderSlide(current);
+    });
+
+    renderSlide(current);
+  </script>
+</body>
+</html>
