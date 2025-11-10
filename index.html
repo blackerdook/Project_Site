@@ -292,8 +292,8 @@
 
     <div class="content-row">
       <div class="phone-frame">
-        <!-- swap these with your real images -->
-        <img id="screenImg" class="phone-img" src="images/home.png" alt="Solo Garden screen" />
+        <!-- must match your actual filename -->
+        <img id="screenImg" class="phone-img" src="images/Home.png" alt="Solo Garden screen" />
       </div>
 
       <div class="text-panel">
@@ -323,13 +323,11 @@
   </div>
 
   <script>
-    // each slide now has: tag, title, img, desc, features[], tech[]
-    // tech[] = where we mention React Native/Expo, Supabase, camera, location, Trefle/Perenual, OpenAI fallback
     const slides = [
       {
         tag: "Home dashboard",
         title: "Welcome home 🌱",
-        img: "images/home.png",
+        img: "images/Home.png",
         desc: "Shows greeting, current date/time, weather from device location, and a task summary. This is the central hub.",
         features: [
           { title: "Dynamic greeting", body: "Morning/afternoon/evening message." },
@@ -347,7 +345,7 @@
       {
         tag: "Plant discovery",
         title: "Discover plants 🌿",
-        img: "images/plants.png",
+        img: "images/Plants.png",
         desc: "Searchable plant list for gardening plants. You said you want to filter out trees and use OpenAI to fill what Perenual free tier doesn’t return.",
         features: [
           { title: "Search bar", body: "Instant filter by name." },
@@ -365,7 +363,7 @@
       {
         tag: "Camera & identify",
         title: "Camera identify mode 📸",
-        img: "images/camera.png",
+        img: "images/Camera.png",
         desc: "Full-screen camera with capture button, identify pill, and gallery import for plant ID.",
         features: [
           { title: "Full-screen camera", body: "Minimal UI, focus on subject." },
@@ -383,7 +381,7 @@
       {
         tag: "Journal & tasks",
         title: "My Plant Journal ✅",
-        img: "images/journal.png",
+        img: "images/Journal.png",
         desc: "Add plant-care tasks, filter them (All / Open / Done), and manage user’s own plants with edit/delete.",
         features: [
           { title: "Inline task input", body: "Add a new task right on top." },
@@ -401,7 +399,7 @@
       {
         tag: "Auth modal",
         title: "Auth & plant actions",
-        img: "images/remedy.png",
+        img: "images/Remedy.png",
         desc: "Modal-style sign-in on top of a garden photo. User can sign in, create account, or continue as guest.",
         features: [
           { title: "Tabbed auth", body: "Sign in / Create account switch." },
@@ -419,7 +417,7 @@
       {
         tag: "Settings",
         title: "Settings & preferences ⚙️",
-        img: "images/settings.png",
+        img: "images/Settings.png",
         desc: "Account status, dark mode toggle, notifications, and support links.",
         features: [
           { title: "Account section", body: "Shows user email or ‘Guest’." },
@@ -437,8 +435,8 @@
       {
         tag: "Seasonal (placeholder)",
         title: "Seasonal plants 🌤️",
-        img: "images/seasonal.png",
-        desc: "A slot for your seasonal tip/seasonal plants screen. Show what to grow in spring in Tauranga with spacing/watering tips.",
+        img: "images/Plants.png",
+        desc: "A slot for your seasonal tip/seasonal plants screen.",
         features: [
           { title: "Season-aware list", body: "Spring / Summer / Autumn / Winter." },
           { title: "Location-based", body: "Adjust by user’s region." },
@@ -455,8 +453,8 @@
       {
         tag: "Badges (placeholder)",
         title: "Badges & XP 🏅",
-        img: "images/badges.png",
-        desc: "Gamified screen to show a user’s progress, streaks, XP and unlockable badges for completing plant tasks.",
+        img: "images/Profile.png",
+        desc: "Gamified screen to show a user’s progress, streaks, XP and unlockable badges.",
         features: [
           { title: "XP ring / progress", body: "Visual feedback for growth." },
           { title: "Badges grid", body: "Locked vs unlocked states." },
