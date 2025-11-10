@@ -95,26 +95,40 @@
       overflow: hidden;
     }
 
+    /* --- iPhone-style frame --- */
     .phone-frame {
-      width: 36%;
-      min-width: 320px;
-      background: radial-gradient(circle at top, rgba(3,4,4,0), rgba(1,1,1,0.7));
-      border-radius: 30px;
-      border: 1px solid rgba(111, 183, 116, 0.1);
+      width: 300px;
+      height: 620px;
+      border-radius: 38px;
+      overflow: hidden;
+      border: 4px solid rgba(120, 240, 160, 0.25);
+      background: #000;
       display: flex;
       align-items: center;
       justify-content: center;
       position: relative;
-      overflow: hidden;
+      box-shadow: 0 0 35px rgba(0, 255, 150, 0.18);
+    }
+
+    .phone-frame::before {
+      content: "";
+      position: absolute;
+      top: 6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 18px;
+      border-radius: 12px;
+      background: #000;
+      z-index: 2;
     }
 
     .phone-img {
-      width: 92%;
-      border-radius: 32px;
-      border: 1px solid rgba(181, 238, 191, 0.12);
-      box-shadow: 0 20px 50px rgba(0,0,0,0.35);
-      max-height: 90%;
-      object-fit: contain;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 38px;
+      overflow: hidden;
     }
 
     .text-panel {
@@ -237,7 +251,6 @@
       box-shadow: 0 0 10px rgba(118, 243, 166, .9);
     }
 
-    /* ==== responsive ==== */
     @media (max-width: 850px) {
       body {
         align-items: flex-start;
@@ -254,11 +267,9 @@
         padding: 12px 16px 90px;
       }
       .phone-frame {
-        width: 100%;
-        min-height: 280px;
-      }
-      .phone-img {
-        width: 56%;
+        margin: 0 auto;
+        width: 260px;
+        height: 540px;
       }
       .slide-indicator {
         left: 16px;
@@ -267,13 +278,6 @@
       }
       .nav-arrows { bottom: 14px; right: 14px; }
       .text-panel { max-height: 50vh; }
-    }
-
-    @media (max-width: 520px) {
-      .phone-img { width: 70%; }
-      h2 { font-size: 1.1rem; }
-      .feature-list { grid-template-columns: 1fr; }
-      .step-counter { font-size: 11px; }
     }
   </style>
 </head>
@@ -287,12 +291,11 @@
         <div class="brand-pill"></div>
         Solo Garden · Product Tour
       </div>
-      <div class="step-counter" id="stepCounter">1 / 8</div>
+      <div class="step-counter" id="stepCounter">1 / 9</div>
     </div>
 
     <div class="content-row">
       <div class="phone-frame">
-        <!-- must match your actual filename -->
         <img id="screenImg" class="phone-img" src="images/Home.png" alt="Solo Garden screen" />
       </div>
 
@@ -324,148 +327,30 @@
 
   <script>
     const slides = [
+      { tag: "Home dashboard", title: "Welcome home 🌱", img: "images/Home.png", desc: "Shows greeting, current date/time, weather from device location, and a task summary.", features: [{ title: "Dynamic greeting", body: "Morning/afternoon/evening message." }, { title: "Weather block", body: "Location-aware, shows temp + condition." }, { title: "Task preview", body: "Shows today’s plant care items." }, { title: "Floating chat bubble", body: "Entry point for assistant/help." }], tech: [{ title: "React Native + Expo", body: "Main UI layout, safe area, cards." }, { title: "Expo Location", body: "Gets city (e.g. Tauranga) for weather." }, { title: "Weather API", body: "Fetches current condition." }, { title: "Conditional rendering", body: "Show ‘All done 🎉’ when no tasks." }] },
+      { tag: "Plant discovery", title: "Discover plants 🌿", img: "images/Plants.png", desc: "Searchable plant list for gardening plants.", features: [{ title: "Search bar", body: "Instant filter by name." }, { title: "Empty state", body: "‘Nothing matched your search.’" }, { title: "Dark layout", body: "Consistent with app brand." }, { title: "Expandable", body: "Ready for trending/recommended." }], tech: [{ title: "Trefle API", body: "Gets base plant data." }, { title: "Filter", body: "Hide non-garden plants." }, { title: "OpenAI enrich", body: "Fill missing description/images." }, { title: "Hooks", body: "useState/useEffect to load + filter list." }] },
+      { tag: "Camera & identify", title: "Camera identify mode 📸", img: "images/Camera.png", desc: "Full-screen camera with capture button and identify pill.", features: [{ title: "Full-screen camera", body: "Minimal UI, focus on subject." }, { title: "Identify CTA", body: "Start analysis." }, { title: "Gallery picker", body: "Import existing photo." }, { title: "Bottom tab bar", body: "Navigate without leaving camera." }], tech: [{ title: "Expo Camera", body: "Request permissions." }, { title: "Base64 upload", body: "Send image to plant-ID service." }, { title: "Async/await", body: "Handle errors cleanly." }, { title: "Overlays", body: "Show identifying state." }] },
+      { tag: "Journal & tasks", title: "My Plant Journal ✅", img: "images/Journal.png", desc: "Add plant-care tasks, filter them, and manage user’s plants.", features: [{ title: "Inline task input", body: "Add a new task right on top." }, { title: "Filter chips", body: "All · Open · Done buttons." }, { title: "Plant list", body: "Show name, date added, image." }, { title: "Action buttons", body: "Edit or delete per item." }], tech: [{ title: "Supabase CRUD", body: "Store tasks and plant records." }, { title: "FlatList", body: "Scrollable task list." }, { title: "Stateful filters", body: "Update without reload." }, { title: "Date formatting", body: "‘Added 22 Oct 2025’ style." }] },
+      { tag: "Auth modal", title: "Auth & plant actions", img: "images/Remedy.png", desc: "Sign-in modal with guest mode.", features: [{ title: "Tabbed auth", body: "Sign in / Create account." }, { title: "Guest mode", body: "Continue as guest." }, { title: "Close button", body: "Non-blocking UX." }, { title: "Background image", body: "Aesthetic overlay." }], tech: [{ title: "Supabase Auth", body: "Email/password login." }, { title: "Modal", body: "Overlay on screen." }, { title: "Form validation", body: "Check inputs." }, { title: "Secure storage", body: "Persist token." }] },
+      { tag: "Settings", title: "Settings & preferences ⚙️", img: "images/Settings.png", desc: "Account, dark mode, notifications.", features: [{ title: "Account section", body: "Shows user email." }, { title: "Dark mode", body: "Toggle theme." }, { title: "Notifications", body: "Enable reminders." }, { title: "Help & Support", body: "Feedback, rate app." }], tech: [{ title: "Theme provider", body: "Global dark/light theme." }, { title: "AsyncStorage", body: "Persist preference." }, { title: "Reusable rows", body: "List-style UI." }, { title: "Expo Notifications", body: "Reminders." }] },
+      { tag: "Seasonal", title: "Seasonal plants 🌤️", img: "images/Seasonal.png", desc: "Show what to grow each season.", features: [{ title: "Season-aware list", body: "Spring / Summer / Autumn / Winter." }, { title: "Location-based", body: "Adjust by user’s region." }, { title: "Card layout", body: "Image + tips." }, { title: "CTA", body: "‘Add to tasks’ in one tap." }], tech: [{ title: "Season logic", body: "Map month → season." }, { title: "Local JSON", body: "Store plant data." }, { title: "Conditional UI", body: "Show fallback." }, { title: "Optional OpenAI", body: "Generate tips." }] },
+      { tag: "Badges", title: "Badges & XP 🏅", img: "images/Profile.png", desc: "Gamified screen with XP and streaks.", features: [{ title: "XP ring", body: "Visual feedback for growth." }, { title: "Badges grid", body: "Locked vs unlocked." }, { title: "Task → XP", body: "Completing tasks grants XP." }, { title: "Profile tie-in", body: "Show on profile." }], tech: [{ title: "Supabase tables", body: "Store XP, levels." }, { title: "Derived state", body: "Compute level from XP." }, { title: "Conditional render", body: "Grey-out locked badges." }, { title: "Animations", body: "Pulse/glow when unlocked." }] },
       {
-        tag: "Home dashboard",
-        title: "Welcome home 🌱",
-        img: "images/Home.png",
-        desc: "Shows greeting, current date/time, weather from device location, and a task summary. This is the central hub.",
+        tag: "Chat assistant",
+        title: "Garden Chatbot 🤖🌿",
+        img: "images/Chatbot.png",
+        desc: "Conversational helper for plant care, pest diagnosis, and ‘what should I plant next?’ questions.",
         features: [
-          { title: "Dynamic greeting", body: "Morning/afternoon/evening message." },
-          { title: "Weather block", body: "Location-aware, shows temp + condition." },
-          { title: "Task preview", body: "Shows today’s plant care items." },
-          { title: "Floating chat bubble", body: "Entry point for assistant/help." }
+          { title: "Natural language Q&A", body: "Ask plain-English questions about plants." },
+          { title: "Remedy suggestions", body: "Suggest treatments for leaf issues." },
+          { title: "Links to app data", body: "Can reference your plants/tasks." },
+          { title: "Inline actions", body: "From chat → add task / reminder." }
         ],
         tech: [
-          { title: "React Native + Expo", body: "Main UI layout, safe area, cards." },
-          { title: "Expo Location", body: "Gets city (e.g. Tauranga) for weather." },
-          { title: "Weather API (e.g. OpenWeather)", body: "Fetches current condition." },
-          { title: "Conditional rendering", body: "Show ‘All done 🎉’ when no tasks." }
-        ]
-      },
-      {
-        tag: "Plant discovery",
-        title: "Discover plants 🌿",
-        img: "images/Plants.png",
-        desc: "Searchable plant list for gardening plants. You said you want to filter out trees and use OpenAI to fill what Perenual free tier doesn’t return.",
-        features: [
-          { title: "Search bar", body: "Instant filter by name." },
-          { title: "Empty state", body: "‘Nothing matched your search.’" },
-          { title: "Dark layout", body: "Consistent with app brand." },
-          { title: "Expandable", body: "Ready for trending/recommended." }
-        ],
-        tech: [
-          { title: "Fetch to plant API (Trefle/Perenual)", body: "Gets base plant data." },
-          { title: "Client-side filter", body: "Hide non-garden plants." },
-          { title: "Optional OpenAI enrich", body: "Fill missing description/images." },
-          { title: "React hooks", body: "useState/useEffect to load + filter list." }
-        ]
-      },
-      {
-        tag: "Camera & identify",
-        title: "Camera identify mode 📸",
-        img: "images/Camera.png",
-        desc: "Full-screen camera with capture button, identify pill, and gallery import for plant ID.",
-        features: [
-          { title: "Full-screen camera", body: "Minimal UI, focus on subject." },
-          { title: "Identify CTA", body: "Top-left pill to start analysis." },
-          { title: "Gallery picker", body: "Import existing photo." },
-          { title: "Bottom tab bar", body: "Navigate without leaving camera." }
-        ],
-        tech: [
-          { title: "Expo Camera / ImagePicker", body: "Request camera permissions." },
-          { title: "Base64 / file upload", body: "Send image to plant-ID service." },
-          { title: "Async/await + try/catch", body: "Handle identify errors cleanly." },
-          { title: "Conditional overlays", body: "Show identifying… state." }
-        ]
-      },
-      {
-        tag: "Journal & tasks",
-        title: "My Plant Journal ✅",
-        img: "images/Journal.png",
-        desc: "Add plant-care tasks, filter them (All / Open / Done), and manage user’s own plants with edit/delete.",
-        features: [
-          { title: "Inline task input", body: "Add a new task right on top." },
-          { title: "Filter chips", body: "All · Open · Done buttons." },
-          { title: "Plant list", body: "Show name, date added, image." },
-          { title: "Action buttons", body: "Edit or delete per item." }
-        ],
-        tech: [
-          { title: "Supabase CRUD", body: "Store tasks and plant records." },
-          { title: "React Native FlatList", body: "Renderable, scrollable task list." },
-          { title: "Stateful filters", body: "Update list without reloading screen." },
-          { title: "Date formatting", body: "‘Added 22 Oct 2025’ style text." }
-        ]
-      },
-      {
-        tag: "Auth modal",
-        title: "Auth & plant actions",
-        img: "images/Remedy.png",
-        desc: "Modal-style sign-in on top of a garden photo. User can sign in, create account, or continue as guest.",
-        features: [
-          { title: "Tabbed auth", body: "Sign in / Create account switch." },
-          { title: "Guest mode", body: "Enter app without full account." },
-          { title: "Close button (X)", body: "Non-blocking UX." },
-          { title: "Background image", body: "Keeps the app aesthetic." }
-        ],
-        tech: [
-          { title: "Supabase Auth", body: "Email/password login + sign-up." },
-          { title: "React Native Modal", body: "Overlay on top of current screen." },
-          { title: "Form validation", body: "Check empty email/password." },
-          { title: "Secure storage (optional)", body: "Persist session token." }
-        ]
-      },
-      {
-        tag: "Settings",
-        title: "Settings & preferences ⚙️",
-        img: "images/Settings.png",
-        desc: "Account status, dark mode toggle, notifications, and support links.",
-        features: [
-          { title: "Account section", body: "Shows user email or ‘Guest’." },
-          { title: "Dark mode", body: "Toggle theme across app." },
-          { title: "Notifications", body: "Space to enable reminders." },
-          { title: "Help & Support", body: "Feedback, rate app, legal." }
-        ],
-        tech: [
-          { title: "Context / Theme provider", body: "Global dark/light theme." },
-          { title: "AsyncStorage", body: "Persist user’s theme preference." },
-          { title: "Reusable row components", body: "List-style settings UI." },
-          { title: "Expo Notifications (future)", body: "Schedule watering reminders." }
-        ]
-      },
-      {
-        tag: "Seasonal (placeholder)",
-        title: "Seasonal plants 🌤️",
-        img: "images/Plants.png",
-        desc: "A slot for your seasonal tip/seasonal plants screen.",
-        features: [
-          { title: "Season-aware list", body: "Spring / Summer / Autumn / Winter." },
-          { title: "Location-based", body: "Adjust by user’s region." },
-          { title: "Card layout", body: "Image + description + bullet tips." },
-          { title: "CTA to journal", body: "‘Add to tasks’ in one tap." }
-        ],
-        tech: [
-          { title: "Weather/season logic", body: "Map month → season." },
-          { title: "Supabase or local JSON", body: "Store seasonal plant data." },
-          { title: "Conditional UI", body: "Show ‘No seasonal plants’ fallback." },
-          { title: "Optional OpenAI", body: "Generate extra growing notes." }
-        ]
-      },
-      {
-        tag: "Badges (placeholder)",
-        title: "Badges & XP 🏅",
-        img: "images/Profile.png",
-        desc: "Gamified screen to show a user’s progress, streaks, XP and unlockable badges.",
-        features: [
-          { title: "XP ring / progress", body: "Visual feedback for growth." },
-          { title: "Badges grid", body: "Locked vs unlocked states." },
-          { title: "Task → XP link", body: "Completing tasks grants XP." },
-          { title: "Profile tie-in", body: "Show on user profile page." }
-        ],
-        tech: [
-          { title: "Supabase tables", body: "Store xp, level, badge_unlocks." },
-          { title: "Derived state", body: "Compute level from XP." },
-          { title: "Conditional render", body: "Grey-out locked badges." },
-          { title: "Animations (Reanimated)", body: "Pulse/glow when unlocked." }
+          { title: "LLM / OpenAI API", body: "Handles understanding and response." },
+          { title: "Supabase context", body: "Pull user’s plants or tasks to ground reply." },
+          { title: "Message history", body: "Send last few turns for context." },
+          { title: "Safe-mode / rate limit", body: "Protects from spam requests." }
         ]
       }
     ];
@@ -494,27 +379,24 @@
       const s = slides[idx];
       imgEl.src = s.img;
       imgEl.alt = s.title;
-      tagEl.innerHTML = `<div class="dot"></div> ${s.tag}`;
+      tagEl.innerHTML = `<div class='dot'></div> ${s.tag}`;
       titleEl.textContent = s.title;
       descEl.textContent = s.desc;
-
       featureListEl.innerHTML = "";
       s.features.forEach(f => {
         const card = document.createElement("div");
         card.className = "feature-card";
-        card.innerHTML = `<div class="feature-title">${f.title}</div><div class="feature-body">${f.body}</div>`;
+        card.innerHTML = `<div class='feature-title'>${f.title}</div><div class='feature-body'>${f.body}</div>`;
         featureListEl.appendChild(card);
       });
-
       techListEl.innerHTML = "";
       s.tech.forEach(t => {
         const card = document.createElement("div");
         card.className = "tech-card";
-        card.innerHTML = `<div class="tech-title">${t.title}</div><div class="tech-body">${t.body}</div>`;
+        card.innerHTML = `<div class='tech-title'>${t.title}</div><div class='tech-body'>${t.body}</div>`;
         techListEl.appendChild(card);
       });
-
-      stepCounterEl.textContent = (idx + 1) + " / " + slides.length;
+      stepCounterEl.textContent = `${idx + 1} / ${slides.length}`;
       renderIndicators();
     }
 
@@ -522,7 +404,6 @@
       current = (current + 1) % slides.length;
       renderSlide(current);
     });
-
     document.getElementById("prevBtn").addEventListener("click", () => {
       current = (current - 1 + slides.length) % slides.length;
       renderSlide(current);
